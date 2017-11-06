@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class FibonacciProducer {
     private static Scanner in;
-
+    public static Producer producer;
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
             System.err.println("Please specify 1 parameters ");
@@ -28,7 +28,7 @@ public class FibonacciProducer {
         in = new Scanner(System.in);
         System.out.println("Enter message(type exit to quit)");
 
-        Producer producer = getProducer();
+        producer = getProducer();
         System.out.println("Write down fib number");
         String line = "";
         Integer fibNumber = in.nextInt();
