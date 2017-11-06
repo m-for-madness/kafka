@@ -21,16 +21,14 @@ public class FibonacciProducer {
             System.exit(-1);
         }
         String topicName = args[0];
+        runProducer(topicName);
+    }
+
+    public static void runProducer(String topicName){
         in = new Scanner(System.in);
         System.out.println("Enter message(type exit to quit)");
 
-        //Configure the Producer
-        Properties configProperties = new Properties();
-        configProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,"localhost:9092");
-        configProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.ByteArraySerializer");
-        configProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
-
-        org.apache.kafka.clients.producer.Producer producer = new KafkaProducer<String, String>(configProperties);
+        Producer producer = getProducer();
         System.out.println("Write down fib number");
         String line = "";
         Integer fibNumber = in.nextInt();
@@ -47,8 +45,13 @@ public class FibonacciProducer {
         in.close();
         producer.close();
     }
-
-
+    public static KafkaProducer getProducer(){
+        Properties configProperties = new Properties();
+        configProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,"localhost:9092");
+        configProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.ByteArraySerializer");
+        configProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
+        return new KafkaProducer<String, String>(configProperties);
+    }
     public static int fibonacci(int n) {
         if (n == 0)
             return 1;
