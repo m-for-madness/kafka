@@ -7,21 +7,30 @@ import java.util.Collections;
 import java.util.Properties;
 
 public class FibonacciConsumer {
-    private final static String TOPIC = "test";
+    private static String TOPIC = "test";
     private final static String BOOTSTRAP_SERVERS =
             "localhost:9092,localhost:9093,localhost:9094";
     public static Consumer<Long, String> consumer;
-
+    private static int m=0;
     public static void main(String[] args) throws InterruptedException {
-        runConsumer(args[0]);
+        try{
+            TOPIC = args[0];
+            if(Integer.parseInt(args[1])>=0){
+                runConsumer(args[0], args[1]);
+            }
+            else throw new NumberFormatException();
+        }
+        catch(NumberFormatException e){
+            System.out.println("You have entered wrong number");
+        }
     }
 
-    private static Consumer<Long, String> createConsumer() {
+    private static Consumer<Long, String> createConsumer(String topic) {
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 BOOTSTRAP_SERVERS);
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
-                "FibonacciConsumer");
+                "FibonacciConsumer2");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 LongDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
@@ -29,19 +38,19 @@ public class FibonacciConsumer {
 
         // Create the consumer using props.
         consumer = new KafkaConsumer<>(props);
-
         // Subscribe to the topic.
-        consumer.subscribe(Collections.singletonList(TOPIC));
+        consumer.subscribe(Collections.singletonList(topic));
         return consumer;
     }
 
 
-    static void runConsumer(String param) throws InterruptedException {
-        final Consumer<Long, String> consumer = createConsumer();
+    static void runConsumer(String topic, String param) throws InterruptedException {
+        consumer = createConsumer(topic);
+        m = Integer.parseInt(param);
         int count = 1;
         final int giveUp = 100;
         int noRecordsCount = 0;
-        int m = Integer.parseInt(param);
+
         while (true) {
             final ConsumerRecords<Long, String> consumerRecords =
                     consumer.poll(1000);
