@@ -1,0 +1,5 @@
+<root>
+    <item name='java.util.concurrent.TimeUnit SECONDS'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+</root>

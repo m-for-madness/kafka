@@ -15,21 +15,26 @@ import java.util.Scanner;
 public class FibonacciProducer {
     private static Scanner in;
     public static Producer producer;
+    public static String topicName="";
+
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
             System.err.println("Please specify 1 parameters ");
             System.exit(-1);
         }
-        String topicName = args[0];
-        runProducer(topicName);
+        topicName = args[0];
+        runProducer();
     }
 
-    public static void runProducer(String topicName){
-        in = new Scanner(System.in);
-        System.out.println("Enter message(type exit to quit)");
-
+    public static void runProducer(){
         producer = getProducer();
-        System.out.println("Write down fib number");
+        inputRecords(producer);
+        producer.close();
+    }
+
+    public static void inputRecords(Producer producer){
+        in = new Scanner(System.in);
+        System.out.println("Write down quantity of fibonacci numbers (type exit to quit)");
         String line = "";
         Integer fibNumber = in.nextInt();
 
@@ -43,7 +48,6 @@ public class FibonacciProducer {
             fibNumber = in.nextInt();
         }
         in.close();
-        producer.close();
     }
     public static KafkaProducer getProducer(){
         Properties configProperties = new Properties();

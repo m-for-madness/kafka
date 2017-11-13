@@ -47,31 +47,35 @@ public class FibonacciConsumer {
     static void runConsumer(String topic, String param) throws InterruptedException {
         consumer = createConsumer(topic);
         m = Integer.parseInt(param);
-        int count = 1;
-        final int giveUp = 100;
-        int noRecordsCount = 0;
 
         while (true) {
             final ConsumerRecords<Long, String> consumerRecords =
                     consumer.poll(1000);
 
-            if (consumerRecords.count() == 0) {
-                noRecordsCount++;
-                if (noRecordsCount > giveUp) break;
-                else continue;
-            }
-            for (ConsumerRecord cr : consumerRecords) {
-                if (count % m == 0) {
-                    System.out.println(cr.value());
-                } else
-                    System.out.println(parseLine(cr.value().toString()));
-
-                count++;
-            }
+           checkForInput(m,consumerRecords);
             consumer.commitAsync();
         }
     }
 
+    public static void checkForInput(Integer param, ConsumerRecords<Long,String> consumerRecords){
+        int count = 1;
+        final int giveUp = 100;
+        int noRecordsCount = 0;
+
+        if (consumerRecords.count() == 0) {
+            noRecordsCount++;
+            if (noRecordsCount > giveUp) break;
+            else continue;
+        }
+        for (ConsumerRecord cr : consumerRecords) {
+            if (count % m == 0) {
+                System.out.println(cr.value());
+            } else
+                System.out.println(parseLine(cr.value().toString()));
+
+            count++;
+        }
+    }
     public static Integer parseLine(String line) {
         String[] s = line.split(" ");
         Integer sum = 0;

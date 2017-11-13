@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ProducerConsumerTest {
 
     @ClassRule
-    public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(2, true, 2, "messages");
+    public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(2, true, 2, "test");
 
     @Test
-    public void testProducerAndConsumer() throws ExecutionException, InterruptedException {
+    public void testProducerAndConsumer() throws ExecutionException, InterruptedException, NoSuchFieldError {
         Properties configProperties = new Properties();
         configProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,"localhost:9092");
         configProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.LongSerializer");
